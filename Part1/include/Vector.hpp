@@ -45,7 +45,7 @@ public:
 	Iterator begin();
 	Iterator end();
 	ConstIterator begin() const; // Needed instead of cbegin() to use, for e.g., range-based loops on const vectors
-	ConstIterator end() const;   // Indeed, ranged-based loop only accept .begin() functions
+	ConstIterator end() const;   
 	ConstIterator cbegin() const;
 	ConstIterator cend() const;
 

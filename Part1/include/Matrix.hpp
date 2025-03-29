@@ -202,7 +202,7 @@ Matrix<T, N, M> Matrix<T, N, M>::transpose() const
 	Matrix temp;
 	for (size_t i = 0; i < N; ++i)
 		for(size_t j = 0; j < M; ++j)
-		temp[i][j] = m_matrix[j][i];
+			temp[i][j] = m_matrix[j][i];
 	return temp;
 }
 
