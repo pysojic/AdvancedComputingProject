@@ -5,6 +5,7 @@
 #include <string>
 #include <type_traits>
 #include <numeric>
+#include <cassert>
 
 #include "VectorIterator.hpp"
 
@@ -101,14 +102,15 @@ Vector<T, N>::~Vector()
 template <typename T, size_t N>
 T& Vector<T, N>::operator[] (size_t index)
 {
-	assert(index < this->size() && "Index out-of-bounds");
+	// This check in only made in debug mode
+	assert(index < size() && "Index out-of-bounds");
 	return m_arr[index];
 }
 
 template <typename T, size_t N>
 const T& Vector<T, N>::operator[] (size_t index) const
 {
-	assert(index < this->size() && "Index out-of-bounds");
+	assert(index < size() && "Index out-of-bounds");
 	return m_arr[index];
 }
 
@@ -127,13 +129,13 @@ const T& Vector<T, N>::front() const noexcept
 template <typename T, size_t N>
 T& Vector<T, N>::back() noexcept
 {
-	return m_arr[this->size() - 1];
+	return m_arr[size() - 1];
 }
 
 template <typename T, size_t N>
 const T& Vector<T, N>::back() const noexcept
 {
-	return m_arr[this->size() - 1];
+	return m_arr[size() - 1];
 }
 
 template <typename T, size_t N>
