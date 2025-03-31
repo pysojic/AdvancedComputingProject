@@ -14,32 +14,28 @@ requires std::is_arithmetic_v<T>
 class Matrix
 {
 public:
-	Matrix();
-	explicit Matrix(const T& data);
+	constexpr Matrix();
+	constexpr explicit Matrix(const T& data);
 	template <typename Distribution, typename Engine>
-	explicit Matrix(Distribution& dist, Engine& engine);
-	Matrix(std::initializer_list<Vector<T, M>> l);
-	Matrix(const Matrix& other);
-	~Matrix();
+	explicit Matrix(Distribution& dist, Engine& engine); // Cannot be constexpr since random gen are runtime-dependent
+	constexpr Matrix(std::initializer_list<Vector<T, M>> l);
+	constexpr Matrix(const Matrix& other);
+	constexpr ~Matrix();
 
-	Vector<T, M>& operator[] (size_t rowIndex);
-	T& operator() (size_t rowIndex, size_t colIndex);
-	const Vector<T, M>& operator[] (size_t rowIndex) const;
-	const T& operator() (size_t rowIndex, size_t colIndex) const;
-	constexpr size_t rowSize() const;
-	constexpr size_t colSize() const;
-	Matrix& operator= (const Matrix& other);
-	Matrix& operator= (const T& val);
+	constexpr Matrix& operator= (const Matrix& other);
+	constexpr Matrix& operator= (const T& val);
+	constexpr Vector<T, M>& operator[] (size_t rowIndex) noexcept;
+	constexpr T& operator() (size_t rowIndex, size_t colIndex) noexcept;
+	constexpr void modify(const std::function<T(T&)>& f);
+	constexpr void fill(const T& val);
 
-	Matrix operator-() const;
-	[[nodiscard]] Matrix transpose() const;
-
-	void modify(const std::function<T(T&)>& f);
-	void fill(const T& val);
+	constexpr const Vector<T, M>& operator[] (size_t rowIndex) const noexcept;
+	constexpr const T& operator() (size_t rowIndex, size_t colIndex) const noexcept;
+	constexpr size_t rowSize() const noexcept;
+	constexpr size_t colSize() const noexcept;
+	[[nodiscard]] constexpr Matrix operator-() const;
+	[[nodiscard]] constexpr Matrix transpose() const;
 	void print() const;
-
-	// template <typename F>
-	// friend Matrix<F, N, M> operator*(const F& scalar, const Matrix<T, N, M>& matrix);
 
 private:
 	Vector<Vector<T, M>, N> m_matrix;
@@ -49,12 +45,12 @@ private:
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-Matrix<T, N, M>::Matrix() : m_matrix{}
+constexpr Matrix<T, N, M>::Matrix() : m_matrix{}
 {}
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-Matrix<T, N, M>::Matrix(const T& data)  : m_matrix{}
+constexpr Matrix<T, N, M>::Matrix(const T& data)  : m_matrix{}
 {
 	for (size_t i = 0; i < N; ++i)
 		for (size_t j = 0; j < M; ++j)
@@ -73,7 +69,7 @@ Matrix<T, N, M>::Matrix(Distribution& dist, Engine& engine)
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-Matrix<T, N, M>::Matrix(std::initializer_list<Vector<T, M>> l) : m_matrix{}
+constexpr Matrix<T, N, M>::Matrix(std::initializer_list<Vector<T, M>> l) : m_matrix{}
 {
 	auto it = l.begin();
 	for (size_t i = 0; i < N; ++i, ++it)
@@ -82,7 +78,7 @@ Matrix<T, N, M>::Matrix(std::initializer_list<Vector<T, M>> l) : m_matrix{}
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-Matrix<T, N, M>::Matrix(const Matrix& other) : m_matrix{}
+constexpr Matrix<T, N, M>::Matrix(const Matrix& other) : m_matrix{}
 {
 	for (size_t i = 0; i < N; ++i)
 		for (size_t j = 0; j < M; ++j)
@@ -91,11 +87,11 @@ Matrix<T, N, M>::Matrix(const Matrix& other) : m_matrix{}
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-Matrix<T, N, M>::~Matrix() {}
+constexpr Matrix<T, N, M>::~Matrix() {}
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-Vector <T, M> & Matrix<T, N, M>::operator[] (size_t rowIndex)
+constexpr Vector <T, M> & Matrix<T, N, M>::operator[] (size_t rowIndex) noexcept
 {
 	assert(rowIndex < M && "Index out-of-bounds");
 	return m_matrix[rowIndex];
@@ -103,7 +99,7 @@ Vector <T, M> & Matrix<T, N, M>::operator[] (size_t rowIndex)
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-const Vector<T, M>& Matrix<T, N, M>::operator[] (size_t rowIndex) const
+constexpr const Vector<T, M>& Matrix<T, N, M>::operator[] (size_t rowIndex) const noexcept
 {
 	assert(rowIndex < M && "Index out-of-bounds");
 	return m_matrix[rowIndex];
@@ -111,7 +107,7 @@ const Vector<T, M>& Matrix<T, N, M>::operator[] (size_t rowIndex) const
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-T& Matrix<T, N, M>::operator() (size_t rowIndex, size_t colIndex)
+constexpr T& Matrix<T, N, M>::operator() (size_t rowIndex, size_t colIndex) noexcept
 {
 	assert(rowIndex < M && "Row index out-of-bounds");
 	assert(colIndex < N && "Column index out-of-bounds");
@@ -120,7 +116,7 @@ T& Matrix<T, N, M>::operator() (size_t rowIndex, size_t colIndex)
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-const T& Matrix<T, N, M>::operator() (size_t rowIndex, size_t colIndex) const
+constexpr const T& Matrix<T, N, M>::operator() (size_t rowIndex, size_t colIndex) const noexcept
 {
 	assert(rowIndex < M && "Row index out-of-bounds");
 	assert(colIndex < N && "Column index out-of-bounds");
@@ -129,21 +125,21 @@ const T& Matrix<T, N, M>::operator() (size_t rowIndex, size_t colIndex) const
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-constexpr size_t Matrix<T, N, M>::rowSize() const
+constexpr size_t Matrix<T, N, M>::rowSize() const noexcept
 {
 	return M;
 }
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-constexpr size_t Matrix<T, N, M>::colSize() const
+constexpr size_t Matrix<T, N, M>::colSize() const noexcept
 {
 	return N;
 }
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-Matrix<T, N, M>& Matrix<T, N, M>::operator= (const Matrix& other)
+constexpr Matrix<T, N, M>& Matrix<T, N, M>::operator= (const Matrix& other)
 {
 	if (this == &other)
 		return *this;
@@ -155,15 +151,15 @@ Matrix<T, N, M>& Matrix<T, N, M>::operator= (const Matrix& other)
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-Matrix<T, N, M>& Matrix<T, N, M>::operator= (const T& val)
+constexpr Matrix<T, N, M>& Matrix<T, N, M>::operator= (const T& val)
 {
-	this->fill(val);
+	fill(val);
 	return *this;
 }
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-Matrix<T, N, M> Matrix<T, N, M>::operator-() const
+constexpr Matrix<T, N, M> Matrix<T, N, M>::operator-() const
 {
 	Matrix temp;
 	for (size_t i = 0; i < N; ++i)
@@ -173,7 +169,7 @@ Matrix<T, N, M> Matrix<T, N, M>::operator-() const
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-Matrix<T, N, M> Matrix<T, N, M>::transpose() const
+constexpr Matrix<T, N, M> Matrix<T, N, M>::transpose() const
 {
 	Matrix temp;
 	for (size_t i = 0; i < N; ++i)
@@ -184,7 +180,7 @@ Matrix<T, N, M> Matrix<T, N, M>::transpose() const
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-void Matrix<T, N, M>::modify(const std::function<T(T&)>& f)
+constexpr void Matrix<T, N, M>::modify(const std::function<T(T&)>& f)
 {
 	for (size_t i = 0; i < N; ++i)
 		this->operator[](i).modify(f);
@@ -192,7 +188,7 @@ void Matrix<T, N, M>::modify(const std::function<T(T&)>& f)
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-void Matrix<T, N, M>::fill(const T& val)
+constexpr void Matrix<T, N, M>::fill(const T& val)
 {
 	for (auto& vec : m_matrix)
 		vec = val;
@@ -210,9 +206,49 @@ void Matrix<T, N, M>::print() const
 	}
 }
 
+// Non-member functions
+
+template <typename T, size_t N, size_t M>
+constexpr Matrix<T, N, M> operator+(const Matrix<T,N,M>& A, const Matrix<T,N,M>& B)
+{
+	Matrix<T,N,M> temp;
+	for (size_t i = 0; i < N; ++i)
+		temp[i] = A[i] + B[i];
+	return temp;
+}
+
+template <typename T, size_t N, size_t M>
+constexpr Matrix<T, N, M> operator-(const Matrix<T,N,M>& A, const Matrix<T,N,M>& B)
+{
+	Matrix<T,N,M> temp;
+	for (size_t i = 0; i < N; ++i)
+		temp[i] = A[i] - B[i];
+	return temp;
+}
+
+template <typename T, typename F, size_t N, size_t M>
+constexpr Matrix<F, N, M> operator*(const Matrix<T, N, M>& matrix, const F& scalar)
+{
+	Matrix<F, N, M> temp;
+	for (size_t i = 0; i < N; ++i)
+		for (size_t j = 0; j < N; ++j)
+			temp[i][j] = scalar * matrix[i][j];
+	return temp;
+}
+
+template <typename T, typename F, size_t N, size_t M>
+constexpr Matrix<F, N, M> operator*(const F& scalar, const Matrix<T, N, M>& matrix)
+{
+	Matrix<F, N, M> temp;
+	for (size_t i = 0; i < N; ++i)
+		for (size_t j = 0; j < N; ++j)
+			temp[i][j] = scalar * matrix[i][j];
+	return temp;
+}
+
 template <typename T, size_t N>
 requires std::is_arithmetic_v<T>
-Matrix<T,N,N> matrix_mult(const Matrix<T,N,N>& A, const Matrix<T,N,N>& B)
+constexpr Matrix<T,N,N> matrix_mult(const Matrix<T,N,N>& A, const Matrix<T,N,N>& B)
 {
     Matrix<T, N, N> C;
     // Compute the transpose of B to make accessing columns easier
@@ -224,44 +260,4 @@ Matrix<T,N,N> matrix_mult(const Matrix<T,N,N>& A, const Matrix<T,N,N>& B)
         }
     }
     return C;
-}
-
-// Non-member functions
-
-template <typename T, size_t N, size_t M>
-Matrix<T, N, M> operator+(const Matrix<T,N,M>& A, const Matrix<T,N,M>& B)
-{
-	Matrix<T,N,M> temp;
-	for (size_t i = 0; i < N; ++i)
-		temp[i] = A[i] + B[i];
-	return temp;
-}
-
-template <typename T, size_t N, size_t M>
-Matrix<T, N, M> operator-(const Matrix<T,N,M>& A, const Matrix<T,N,M>& B)
-{
-	Matrix<T,N,M> temp;
-	for (size_t i = 0; i < N; ++i)
-		temp[i] = A[i] - B[i];
-	return temp;
-}
-
-template <typename T, typename F, size_t N, size_t M>
-Matrix<F, N, M> operator*(const Matrix<T, N, M>& matrix, const F& scalar)
-{
-	Matrix<F, N, M> temp;
-	for (size_t i = 0; i < N; ++i)
-		for (size_t j = 0; j < N; ++j)
-			temp[i][j] = scalar * matrix[i][j];
-	return temp;
-}
-
-template <typename T, typename F, size_t N, size_t M>
-Matrix<F, N, M> operator*(const F& scalar, const Matrix<T, N, M>& matrix)
-{
-	Matrix<F, N, M> temp;
-	for (size_t i = 0; i < N; ++i)
-		for (size_t j = 0; j < N; ++j)
-			temp[i][j] = scalar * matrix[i][j];
-	return temp;
 }
