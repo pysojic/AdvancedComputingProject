@@ -23,16 +23,14 @@ public:
 	~Matrix();
 
 	Vector<T, M>& operator[] (size_t rowIndex);
-	const Vector<T, M>& operator[] (size_t rowIndex) const;
 	T& operator() (size_t rowIndex, size_t colIndex);
+	const Vector<T, M>& operator[] (size_t rowIndex) const;
 	const T& operator() (size_t rowIndex, size_t colIndex) const;
 	constexpr size_t rowSize() const;
 	constexpr size_t colSize() const;
 	Matrix& operator= (const Matrix& other);
 	Matrix& operator= (const T& val);
 
-	Matrix operator+ (const Matrix& other) const;
-	Matrix operator- (const Matrix& other) const;
 	Matrix operator-() const;
 	[[nodiscard]] Matrix transpose() const;
 
@@ -165,26 +163,6 @@ Matrix<T, N, M>& Matrix<T, N, M>::operator= (const T& val)
 
 template <typename T, size_t N, size_t M>
 requires std::is_arithmetic_v<T>
-Matrix<T, N, M> Matrix<T, N, M>::operator+ (const Matrix& other) const
-{
-	Matrix temp;
-	for (size_t i = 0; i < N; ++i)
-		temp[i] = other.operator[](i) + this->operator[](i);
-	return temp;
-}
-
-template <typename T, size_t N, size_t M>
-requires std::is_arithmetic_v<T>
-Matrix<T, N, M> Matrix<T, N, M>::operator- (const Matrix& other) const
-{
-	Matrix temp;
-	for (size_t i = 0; i < N; ++i)
-		temp[i] = other.operator[](i) + this->operator[](i);
-	return temp;
-}
-
-template <typename T, size_t N, size_t M>
-requires std::is_arithmetic_v<T>
 Matrix<T, N, M> Matrix<T, N, M>::operator-() const
 {
 	Matrix temp;
@@ -248,12 +226,23 @@ Matrix<T,N,N> matrix_mult(const Matrix<T,N,N>& A, const Matrix<T,N,N>& B)
     return C;
 }
 
-template <typename T, typename F, size_t N, size_t M>
-Matrix<F, N, M> operator*(const F& scalar, const Matrix<T, N, M>& matrix)
+// Non-member functions
+
+template <typename T, size_t N, size_t M>
+Matrix<T, N, M> operator+(const Matrix<T,N,M>& A, const Matrix<T,N,M>& B)
 {
-	Matrix<F, N, M> temp;
+	Matrix<T,N,M> temp;
 	for (size_t i = 0; i < N; ++i)
-		temp[i] = scalar * matrix[i];
+		temp[i] = A[i] + B[i];
+	return temp;
+}
+
+template <typename T, size_t N, size_t M>
+Matrix<T, N, M> operator-(const Matrix<T,N,M>& A, const Matrix<T,N,M>& B)
+{
+	Matrix<T,N,M> temp;
+	for (size_t i = 0; i < N; ++i)
+		temp[i] = A[i] - B[i];
 	return temp;
 }
 
@@ -262,6 +251,17 @@ Matrix<F, N, M> operator*(const Matrix<T, N, M>& matrix, const F& scalar)
 {
 	Matrix<F, N, M> temp;
 	for (size_t i = 0; i < N; ++i)
-		temp[i] = scalar * matrix[i];
+		for (size_t j = 0; j < N; ++j)
+			temp[i][j] = scalar * matrix[i][j];
+	return temp;
+}
+
+template <typename T, typename F, size_t N, size_t M>
+Matrix<F, N, M> operator*(const F& scalar, const Matrix<T, N, M>& matrix)
+{
+	Matrix<F, N, M> temp;
+	for (size_t i = 0; i < N; ++i)
+		for (size_t j = 0; j < N; ++j)
+			temp[i][j] = scalar * matrix[i][j];
 	return temp;
 }
