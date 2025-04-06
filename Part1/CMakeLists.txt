@@ -8,5 +8,5 @@ include_directories(include)
 
 add_executable(Project_Part1 main.cpp)
 
-target_compile_options(Project_Part1 PRIVATE -O2 -march=native) # Use for debug: -O0 -g -Wall -Wextra -Wpedantic
+target_compile_options(Project_Part1 PRIVATE -O0 -march=native) # Use for debug: -O0 -g -Wall -Wextra -Wpedantic
 
