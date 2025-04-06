@@ -183,6 +183,7 @@ void benchmark_mm_transposed_b(int size, int runs) {
     delete[] R;
 }
 
+#ifndef NO_MAIN_IN_BENCH
 int main() {
     // Example test sizes
     std::vector<int> vecSizes = {64, 512, 2048}; // for MV
@@ -205,3 +206,4 @@ int main() {
 
     return 0;
 }
+#endif
