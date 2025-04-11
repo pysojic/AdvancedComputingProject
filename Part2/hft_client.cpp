@@ -4,6 +4,7 @@
 #include <cstring>
 #include <deque>
 #include <cstdlib>
+#include <format>
 #include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -14,10 +15,12 @@ using namespace std;
 #define SERVER_PORT 12345
 #define BUFFER_SIZE 1024
 
-void receiveAndRespond(int socketFd, const string& name) 
+std::pair<size_t, size_t> receiveAndRespond(int socketFd, const string& name) 
 {
     char buffer[BUFFER_SIZE];
     std::deque<float> priceHistory;
+    size_t hits = 0;
+    size_t orderCount = 0; // Count for all orders (hit and non-hit)
 
     // Send client name
     send(socketFd, name.c_str(), name.size(), 0);
@@ -61,24 +64,27 @@ void receiveAndRespond(int socketFd, const string& name)
             if (up || down) 
             {
                 this_thread::sleep_for(chrono::milliseconds(10 + rand() % 50));
-                std::cout << "HIT!" << std::endl;
                 // Send order (price ID)
                 string order = to_string(priceId);
                 send(socketFd, order.c_str(), order.length(), 0);
-                cout << "📤 Sent order for price ID: " << priceId << endl;
                 cout << "Momentum up! Sending order for price ID " << priceId << endl;
+                ++hits;
+            }
+            else 
+            {
+                cout << "No momentum. Ignoring price ID " << priceId << endl;
             }
         }
-        else 
-        {
-            cout << "No momentum. Ignoring price ID " << priceId << endl;
-        }
+
+        ++orderCount;
 
         // Simulate reaction delay
         this_thread::sleep_for(chrono::milliseconds(100 + rand() % 300));
     }
 
     close(socketFd);
+
+    return {orderCount, hits};
 }
 
 int main() {
@@ -105,6 +111,9 @@ int main() {
     }
 
     cout << "✅ Connected to server at " << SERVER_IP << ":" << SERVER_PORT << endl;
-    receiveAndRespond(sock, name);
+    auto stats = receiveAndRespond(sock, name);
+
+    cout << std::format("Total number of orders received: {}\n Total number of hits: {}\n Hit-to-order ratio: {}%",
+        stats.first, stats.second, static_cast<float>(stats.second) / stats.first * 100);
     return 0;
 }
