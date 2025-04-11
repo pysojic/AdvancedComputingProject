@@ -72,7 +72,7 @@ std::pair<size_t, size_t> receiveAndRespond(int socketFd, const string& name)
             }
             else 
             {
-                cout << "No momentum. Ignoring price ID " << priceId << endl;
+                cout << "No momentum. Ignoring price ID" << priceId << endl;
             }
         }
 
