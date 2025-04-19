@@ -6,15 +6,12 @@
 #include "order_manager.h"
 
 int main(int argc, char* argv[]) {
-    // Set up the market data snapshot and order manager
     MarketSnapshot market;
     OrderManager orderManager;
 
-    // Strategy thresholds for demonstration
     const double buyThreshold = 100.0;
     const double sellThreshold = 110.0;
 
-    // Open the feed file if provided as argument or default to sample_feed.txt
     std::istream* input = nullptr;
     std::ifstream file;
     if (argc > 1) {
@@ -25,12 +22,10 @@ int main(int argc, char* argv[]) {
         }
         input = &file;
     } else {
-        // Try default sample_feed.txt
         file.open("sample_feed.txt");
         if (file) {
             input = &file;
         } else {
-            // Fallback to standard input
             input = &std::cin;
             if (!std::cin.good()) {
                 std::cerr << "No input feed provided." << std::endl;
@@ -40,10 +35,8 @@ int main(int argc, char* argv[]) {
     }
 
     std::string line;
-    // Read the feed line by line
     while (std::getline(*input, line)) {
         if (line.empty()) continue;
-        // Print the feed line for logging
         std::cout << ">> " << line << std::endl;
         std::istringstream iss(line);
         std::string type;
@@ -67,7 +60,6 @@ int main(int argc, char* argv[]) {
                     std::cout << "Updated ASK " << price << " -> qty " << quantity;
                 }
             }
-            // After updating, log the current best bid and ask
             const PriceLevel* bestBid = market.getBestBid();
             const PriceLevel* bestAsk = market.getBestAsk();
             std::cout << ". Best Bid=";
@@ -83,27 +75,21 @@ int main(int argc, char* argv[]) {
                 std::cout << "N/A";
             }
             std::cout << std::endl;
-            // Strategy: place orders based on thresholds if no order is currently open
             if (bestAsk && orderManager.empty() && bestAsk->price <= buyThreshold) {
-                // Best ask is at or below threshold -> place a buy order
                 orderManager.placeOrder(OrderManager::Side::Buy, bestAsk->price, 10);
             } else if (bestBid && orderManager.empty() && bestBid->price >= sellThreshold) {
-                // Best bid is at or above threshold -> place a sell order
                 orderManager.placeOrder(OrderManager::Side::Sell, bestBid->price, 5);
             }
         } else if (type == "EXECUTION") {
             int orderId;
             int fillQty;
             iss >> orderId >> fillQty;
-            // Handle an execution fill event for an order
             orderManager.handleExecution(orderId, fillQty);
         } else {
-            // Unknown event type (skip or log)
             std::cerr << "Unknown feed event type: " << type << std::endl;
         }
     }
 
-    // After processing all feed events, cancel any remaining open orders (cleanup)
     if (!orderManager.empty()) {
         std::cout << "End of feed. Canceling any open orders." << std::endl;
         orderManager.cancelAll();
