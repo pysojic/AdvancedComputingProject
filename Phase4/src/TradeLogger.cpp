@@ -1,0 +1,1 @@
+#include "../include/TradeLogger.hpp"
