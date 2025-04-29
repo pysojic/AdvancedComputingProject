@@ -3,6 +3,7 @@
 #include <map>
 #include <memory>
 #include <iostream>
+#include "config.h"
 
 template<typename PriceType, typename OrderIdType>
 class OrderBook {

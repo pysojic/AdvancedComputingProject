@@ -1,5 +1,5 @@
 #include "../include/MarketData.hpp"
-
+#include "config.h"
 #include <random>
 
 MarketData MarketDataFeed::generate_mock_data(const std::string& symbol) {

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include "config.h"
 
 template <typename PriceType, typename OrderIdType>
 struct Order {

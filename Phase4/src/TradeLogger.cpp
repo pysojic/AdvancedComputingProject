@@ -1,5 +1,6 @@
 #include "../include/TradeLogger.hpp"
 #include <iostream>
+#include "config.h"
 
 TradeLogger::TradeLogger(size_t batchSize)
  : m_batchSize(batchSize)

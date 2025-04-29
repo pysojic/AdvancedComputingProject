@@ -3,6 +3,7 @@
 #include <cmath>
 #include <algorithm>
 #include <numeric>
+#include "config.h"
 
 void analyzeLatencies(const std::vector<long long>& latencies) {
     if(latencies.empty()) return;

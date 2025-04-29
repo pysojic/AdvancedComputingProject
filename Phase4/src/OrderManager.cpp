@@ -1,4 +1,5 @@
 #include "../include/OrderManager.hpp"
+#include "config.h"
 
 template<typename PriceType, typename OrderIdType>
 OrderManager<PriceType, OrderIdType>::OrderManager(OrderBook<PriceType, OrderIdType>& book)

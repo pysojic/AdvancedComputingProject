@@ -2,6 +2,7 @@
 #include "OrderBook.hpp"
 #include <memory>
 #include <type_traits>
+#include "config.h"
 
 template<typename PriceType, typename OrderIdType>
 class OrderManager {

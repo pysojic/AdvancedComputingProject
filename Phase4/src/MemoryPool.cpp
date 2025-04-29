@@ -1,5 +1,6 @@
 #include "../include/MemoryPool.hpp"
 #include <cassert>
+#include "config.h"
 
 MemoryPool::MemoryPool(size_t blockSize, size_t blockCount)
  : m_blockSize(blockSize)

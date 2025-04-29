@@ -2,6 +2,7 @@
 #include <algorithm>               // <— add this
 #include "../include/LatencyAnalyzer.hpp"
 #include <vector>
+#include "config.h"
 
 int main() {
     std::vector<long long> v = {10,20,30,40,50,60,70,80,90,100};

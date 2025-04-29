@@ -1,6 +1,13 @@
 #pragma once
 #include "OrderBook.hpp"
 #include "TradeLogger.hpp"
+#include "config.h"
+
+struct PnLTrade {
+    bool   is_buy;
+    double price;
+    int    quantity;
+  };
 
 template<typename PriceType, typename OrderIdType>
 class MatchingEngine {
@@ -9,7 +16,7 @@ class MatchingEngine {
 public:
     explicit MatchingEngine(OrderBook<PriceType, OrderIdType>& book);
 
-    void match_orders(TradeLogger& logger);
+    std::vector<PnLTrade> match_orders(TradeLogger& logger);
 
 private:
     OrderBook<PriceType, OrderIdType>& order_book;

@@ -1,4 +1,5 @@
 #include "../include/OrderBook.hpp"
+#include "config.h"
 
 template<typename PriceType, typename OrderIdType>
 OrderBook<PriceType, OrderIdType>::OrderBook() {}

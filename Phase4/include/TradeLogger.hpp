@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include "config.h"
 
 class TradeLogger {
 public:
