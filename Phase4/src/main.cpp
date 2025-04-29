@@ -1,32 +1,41 @@
 #include <iostream>
-#include <vector>
-#include <numeric>
-#include <algorithm>
+#include <memory>
 #include "../include/Order.hpp"
-#include "../include/Timer.hpp"
+#include "../include/OrderBook.hpp"
+#include "../include/OrderManager.hpp"
+#include "../include/MatchingEngine.hpp"
+#include "../include/TradeLogger.hpp"
 
-using OrderType = Order<double, int>;
+using PriceT = double;
+using OrderID = int;
+using OrderType = Order<PriceT, OrderID>;
 
 int main() {
-    std::vector<long long> latencies;
-    const int num_ticks = 10000;
+    OrderBook<PriceT, OrderID> book;
+    OrderManager<PriceT, OrderID> manager(book);
+    MatchingEngine<PriceT, OrderID> engine(book);
+    TradeLogger logger;
 
-    for (int i = 0; i < num_ticks; ++i) {
-        Timer timer;
-        timer.start();
+    const std::string symbol = "AAPL";
 
-        // Simulated tick + order match (replace with real logic)
-        OrderType order(i, "AAPL", 150.0 + (i % 5), 100, i % 2 == 0);
-        // simulate match logic here
+    // Submit some buy orders
+    manager.submit_order(std::make_shared<OrderType>(1, symbol, 150.0, 100, true)); // Buy 100 @ 150
+    manager.submit_order(std::make_shared<OrderType>(2, symbol, 151.0, 50, true));  // Buy 50 @ 151
 
-        latencies.push_back(timer.stop());
-    }
+    // Submit some sell orders
+    manager.submit_order(std::make_shared<OrderType>(3, symbol, 149.0, 70, false)); // Sell 70 @ 149
+    manager.submit_order(std::make_shared<OrderType>(4, symbol, 152.0, 30, false)); // Sell 30 @ 152
 
-    // Analyze latency
-    auto min = *std::min_element(latencies.begin(), latencies.end());
-    auto max = *std::max_element(latencies.begin(), latencies.end());
-    double mean = std::accumulate(latencies.begin(), latencies.end(), 0.0) / latencies.size();
+    std::cout << "\n--- Matching Phase 1 ---\n";
+    engine.match_orders(logger);
+    book.print_book();
 
-    std::cout << "Tick-to-Trade Latency (nanoseconds):\n";
-    std::cout << "Min: " << min << " | Max: " << max << " | Mean: " << mean << '\n';
+    // Submit more orders to see partial fills
+    manager.submit_order(std::make_shared<OrderType>(5, symbol, 150.0, 100, false)); // Sell 100 @ 151
+
+    std::cout << "\n--- Matching Phase 2 ---\n";
+    engine.match_orders(logger);
+    book.print_book();
+
+    return 0;
 }

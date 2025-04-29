@@ -1,19 +1,15 @@
-#include <iostream>
-#include <map>
+#pragma once
+#include <string>
+#include <chrono>
 
 struct alignas(64) MarketData {
     std::string symbol;
     double bid_price;
-    int bid_size;
     double ask_price;
-    int ask_size;
     std::chrono::high_resolution_clock::time_point timestamp;
 };
 
-class MarketDataHandler {
-    public:
-        void handleTick(MarketData tick);
-    
-    private:
-
+class MarketDataFeed {
+public:
+    MarketData generate_mock_data(const std::string& symbol);
 };
