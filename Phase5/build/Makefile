@@ -142,6 +142,43 @@ Project_Part5_2/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_2.dir/build.make CMakeFiles/Project_Part5_2.dir/build
 .PHONY : Project_Part5_2/fast
 
+#=============================================================================
+# Target rules for targets named Project_Part5_3
+
+# Build rule for target.
+Project_Part5_3: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Project_Part5_3
+.PHONY : Project_Part5_3
+
+# fast build rule for target.
+Project_Part5_3/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_3.dir/build.make CMakeFiles/Project_Part5_3.dir/build
+.PHONY : Project_Part5_3/fast
+
+priority_queue.o: priority_queue.cpp.o
+.PHONY : priority_queue.o
+
+# target to build an object file
+priority_queue.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_3.dir/build.make CMakeFiles/Project_Part5_3.dir/priority_queue.cpp.o
+.PHONY : priority_queue.cpp.o
+
+priority_queue.i: priority_queue.cpp.i
+.PHONY : priority_queue.i
+
+# target to preprocess a source file
+priority_queue.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_3.dir/build.make CMakeFiles/Project_Part5_3.dir/priority_queue.cpp.i
+.PHONY : priority_queue.cpp.i
+
+priority_queue.s: priority_queue.cpp.s
+.PHONY : priority_queue.s
+
+# target to generate assembly for a file
+priority_queue.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_3.dir/build.make CMakeFiles/Project_Part5_3.dir/priority_queue.cpp.s
+.PHONY : priority_queue.cpp.s
+
 robin_hood_hashing.o: robin_hood_hashing.cpp.o
 .PHONY : robin_hood_hashing.o
 
@@ -200,6 +237,10 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... Project_Part5_1"
 	@echo "... Project_Part5_2"
+	@echo "... Project_Part5_3"
+	@echo "... priority_queue.o"
+	@echo "... priority_queue.i"
+	@echo "... priority_queue.s"
 	@echo "... robin_hood_hashing.o"
 	@echo "... robin_hood_hashing.i"
 	@echo "... robin_hood_hashing.s"
