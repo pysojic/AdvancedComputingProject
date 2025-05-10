@@ -1,0 +1,4 @@
+/Users/py/Documents/UChicago/Courses/Spring_2025/Advanced Computing/Project/Part2/build/CMakeFiles/Project_Part2_client.dir
+/Users/py/Documents/UChicago/Courses/Spring_2025/Advanced Computing/Project/Part2/build/CMakeFiles/Project_Part2_server.dir
+/Users/py/Documents/UChicago/Courses/Spring_2025/Advanced Computing/Project/Part2/build/CMakeFiles/edit_cache.dir
+/Users/py/Documents/UChicago/Courses/Spring_2025/Advanced Computing/Project/Part2/build/CMakeFiles/rebuild_cache.dir
