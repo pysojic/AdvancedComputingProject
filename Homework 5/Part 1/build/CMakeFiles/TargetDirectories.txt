@@ -1,0 +1,3 @@
+C:/Users/timom/Downloads/Homework 5/Part 1/build/CMakeFiles/benchmark.dir
+C:/Users/timom/Downloads/Homework 5/Part 1/build/CMakeFiles/edit_cache.dir
+C:/Users/timom/Downloads/Homework 5/Part 1/build/CMakeFiles/rebuild_cache.dir
