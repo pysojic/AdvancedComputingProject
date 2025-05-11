@@ -130,37 +130,24 @@ Project_Part5_1/fast:
 .PHONY : Project_Part5_1/fast
 
 #=============================================================================
-# Target rules for targets named Project_Part5_2
+# Target rules for targets named Project_Part5_4
 
 # Build rule for target.
-Project_Part5_2: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Project_Part5_2
-.PHONY : Project_Part5_2
+Project_Part5_4: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Project_Part5_4
+.PHONY : Project_Part5_4
 
 # fast build rule for target.
-Project_Part5_2/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_2.dir/build.make CMakeFiles/Project_Part5_2.dir/build
-.PHONY : Project_Part5_2/fast
-
-#=============================================================================
-# Target rules for targets named Project_Part5_3
-
-# Build rule for target.
-Project_Part5_3: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Project_Part5_3
-.PHONY : Project_Part5_3
-
-# fast build rule for target.
-Project_Part5_3/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_3.dir/build.make CMakeFiles/Project_Part5_3.dir/build
-.PHONY : Project_Part5_3/fast
+Project_Part5_4/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_4.dir/build.make CMakeFiles/Project_Part5_4.dir/build
+.PHONY : Project_Part5_4/fast
 
 priority_queue.o: priority_queue.cpp.o
 .PHONY : priority_queue.o
 
 # target to build an object file
 priority_queue.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_3.dir/build.make CMakeFiles/Project_Part5_3.dir/priority_queue.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_4.dir/build.make CMakeFiles/Project_Part5_4.dir/priority_queue.cpp.o
 .PHONY : priority_queue.cpp.o
 
 priority_queue.i: priority_queue.cpp.i
@@ -168,7 +155,7 @@ priority_queue.i: priority_queue.cpp.i
 
 # target to preprocess a source file
 priority_queue.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_3.dir/build.make CMakeFiles/Project_Part5_3.dir/priority_queue.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_4.dir/build.make CMakeFiles/Project_Part5_4.dir/priority_queue.cpp.i
 .PHONY : priority_queue.cpp.i
 
 priority_queue.s: priority_queue.cpp.s
@@ -176,7 +163,7 @@ priority_queue.s: priority_queue.cpp.s
 
 # target to generate assembly for a file
 priority_queue.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_3.dir/build.make CMakeFiles/Project_Part5_3.dir/priority_queue.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_4.dir/build.make CMakeFiles/Project_Part5_4.dir/priority_queue.cpp.s
 .PHONY : priority_queue.cpp.s
 
 robin_hood_hashing.o: robin_hood_hashing.cpp.o
@@ -203,30 +190,6 @@ robin_hood_hashing.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_1.dir/build.make CMakeFiles/Project_Part5_1.dir/robin_hood_hashing.cpp.s
 .PHONY : robin_hood_hashing.cpp.s
 
-time_series.o: time_series.cpp.o
-.PHONY : time_series.o
-
-# target to build an object file
-time_series.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_2.dir/build.make CMakeFiles/Project_Part5_2.dir/time_series.cpp.o
-.PHONY : time_series.cpp.o
-
-time_series.i: time_series.cpp.i
-.PHONY : time_series.i
-
-# target to preprocess a source file
-time_series.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_2.dir/build.make CMakeFiles/Project_Part5_2.dir/time_series.cpp.i
-.PHONY : time_series.cpp.i
-
-time_series.s: time_series.cpp.s
-.PHONY : time_series.s
-
-# target to generate assembly for a file
-time_series.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Project_Part5_2.dir/build.make CMakeFiles/Project_Part5_2.dir/time_series.cpp.s
-.PHONY : time_series.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -236,17 +199,13 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Project_Part5_1"
-	@echo "... Project_Part5_2"
-	@echo "... Project_Part5_3"
+	@echo "... Project_Part5_4"
 	@echo "... priority_queue.o"
 	@echo "... priority_queue.i"
 	@echo "... priority_queue.s"
 	@echo "... robin_hood_hashing.o"
 	@echo "... robin_hood_hashing.i"
 	@echo "... robin_hood_hashing.s"
-	@echo "... time_series.o"
-	@echo "... time_series.i"
-	@echo "... time_series.s"
 .PHONY : help
 
 
