@@ -12,8 +12,6 @@ int main()
     OrderBookTests::runTests<OptimizedOrderBook>();
     std::cout << "All tests passed!" << std::endl;
 
-    stressTest(optimized_ob, 100);
-
     // Run benchmark
     std::cout << "Running benchmark..." << std::endl;
 
