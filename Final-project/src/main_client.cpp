@@ -61,6 +61,7 @@ int main()
     }
     std::cout << "TCP connection successfully established!\n";
 
+
     char        buffer[MAX_UDP_PAYLOAD];
     socklen_t   client_len   = sizeof(client_addr_udp);
     std::string full_message;
@@ -128,14 +129,12 @@ int main()
                 }
             }
 
-            // 4) Debug output
             std::cout << "CHALLENGE_ID: " << challenge_id << "\n";
             std::cout << "TARGET:       " << target_sec  << "\n";
             std::cout << "BID (regex):  " << target_bid  << "\n";
             std::cout << "ASK (regex):  " << target_ask  << "\n";
             std::cout << "\n";
 
-            // 5) Build & send response
             std::string response =
                 "CHALLENGE_RESPONSE " + challenge_id +
                 " " + target_sec +
