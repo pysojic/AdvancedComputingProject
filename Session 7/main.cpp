@@ -1,54 +1,63 @@
+// main.cpp
 #include "Log.hpp"
+#include "ConcurrentQueue.hpp"
 #include "OrderProcessing.hpp"
 #include "Analytics.hpp"
+
+#include <barrier>
 #include <iostream>
 #include <shared_mutex>
 #include <thread>
 #include <vector>
 
 int main(int argc, char* argv[]) {
-  int P=5, C=4, N=10;
-  if(argc>=4){
+  // optional: show DEBUG logs by uncommenting:
+  // Log::setLevel(Log::DEBUG);
+
+  int P = 5, C = 4, N = 10;
+  if (argc >= 4) {
     P = std::stoi(argv[1]);
     C = std::stoi(argv[2]);
     N = std::stoi(argv[3]);
   }
   totalOrders = P * N;
   Log::line(Log::INFO,
-    "Launching " + std::to_string(P) + " producers, "
+    "Starting " + std::to_string(P) + " producers, "
     + std::to_string(C) + " consumers, "
     + std::to_string(N) + " orders each ("
-    + std::to_string(totalOrders) + " total)");
+    + std::to_string(totalOrders) + " total)"
+  );
 
-//   std::barrier sync(C);
-//   syncBarrierPtr = &sync;
+//   std::barrier syncBarrier(C);
+//   syncBarrierPtr = &syncBarrier;
 
-  // spawn threads
-  std::vector<std::thread> prods, cons;
-  for(int i=0;i<P;i++)
-    prods.emplace_back(orderProducer, i+1, N);
-  for(int i=0;i<C;i++)
-    cons.emplace_back(orderConsumer);
+  std::vector<std::thread> producers, consumers;
+  for (int i = 0; i < P; ++i)
+    producers.emplace_back(orderProducer, i+1, N);
+  for (int i = 0; i < C; ++i)
+    consumers.emplace_back(orderConsumer);
 
-  // go!
+  // start all threads
   startLatch.count_down();
 
-  for(auto& t: prods) t.join();
-  for(auto& t: cons) t.join();
+  for (auto &t : producers) t.join();
+  for (auto &t : consumers) t.join();
 
-  std::cout<<"\n\n⏹ All done! Processed: "
-           << ordersProcessed.load() << " orders\n";
+  std::cout << "\nAll done! Processed "
+            << ordersProcessed.load()
+            << " orders\n";
 
   runAnalytics();
 
-  // final book
   {
     std::shared_lock sl(orderBookMutex);
-    std::cout<<"\n--- Final Order Book ---\n";
-    for(auto const& [sym,vol]: orderBook)
-      std::cout<<sym
-               <<" | buy="<<vol.first
-               <<" | sell="<<vol.second<<"\n";
+    std::cout << "\nFinal Order Book:\n";
+    for (auto const& [sym,vol] : orderBook)
+      std::cout << sym
+                << " | buy="  << vol.first
+                << " | sell=" << vol.second
+                << "\n";
   }
+
   return 0;
 }

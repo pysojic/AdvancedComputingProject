@@ -1,3 +1,4 @@
+# CMakeLists.txt
 cmake_minimum_required(VERSION 3.20)
 project(orderbook LANGUAGES CXX)
 
@@ -10,8 +11,4 @@ else()
   add_compile_options(-O2 -pthread)
 endif()
 
-add_executable(orderbook
-  main.cpp
-  OrderProcessing.hpp
-  Analytics.hpp
-)
+add_executable(orderbook main.cpp)
