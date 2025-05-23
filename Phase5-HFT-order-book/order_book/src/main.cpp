@@ -14,6 +14,12 @@ int main()
 
     // Run benchmark
     std::cout << "Running benchmark..." << std::endl;
+
+    benchmark(1000);
+    benchmark(5000);
+    benchmark(10000);
+    benchmark(50000);
     benchmark(100000);
+
     return 0;
 }

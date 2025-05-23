@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 /cygdrive/c/Users/benja/OneDrive/Bureau/UchicagoMSFM/advanced_computing/AdvancedComputingProject/Phase5-HFT-order-book/order_book/build/CMakeFiles/benchmark_orderbook.dir
 /cygdrive/c/Users/benja/OneDrive/Bureau/UchicagoMSFM/advanced_computing/AdvancedComputingProject/Phase5-HFT-order-book/order_book/build/CMakeFiles/edit_cache.dir
 /cygdrive/c/Users/benja/OneDrive/Bureau/UchicagoMSFM/advanced_computing/AdvancedComputingProject/Phase5-HFT-order-book/order_book/build/CMakeFiles/rebuild_cache.dir
+=======
+/Users/py/Documents/UChicago/Courses/Spring_2025/Advanced Computing/Project/Phase5-HFT-order-book/order_book/build/CMakeFiles/benchmark_orderbook.dir
+/Users/py/Documents/UChicago/Courses/Spring_2025/Advanced Computing/Project/Phase5-HFT-order-book/order_book/build/CMakeFiles/edit_cache.dir
+/Users/py/Documents/UChicago/Courses/Spring_2025/Advanced Computing/Project/Phase5-HFT-order-book/order_book/build/CMakeFiles/rebuild_cache.dir
+>>>>>>> c5a439e2893c674b5dcd3036e47386824e3ec023
