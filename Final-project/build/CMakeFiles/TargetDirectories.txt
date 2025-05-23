@@ -1,4 +1,0 @@
-/Users/py/Documents/UChicago/Courses/Spring_2025/Advanced Computing/Project/Final-project/build/CMakeFiles/Final_Project_Server.dir
-/Users/py/Documents/UChicago/Courses/Spring_2025/Advanced Computing/Project/Final-project/build/CMakeFiles/Final_Project_Client.dir
-/Users/py/Documents/UChicago/Courses/Spring_2025/Advanced Computing/Project/Final-project/build/CMakeFiles/edit_cache.dir
-/Users/py/Documents/UChicago/Courses/Spring_2025/Advanced Computing/Project/Final-project/build/CMakeFiles/rebuild_cache.dir
