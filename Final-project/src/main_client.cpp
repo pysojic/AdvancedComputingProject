@@ -66,6 +66,8 @@ int main()
 
     while (true) 
     {
+        StopWatch sw;
+        sw.Start();
         ssize_t received = recvfrom(client_fd_udp,
                                     buffer,
                                     sizeof(buffer),
@@ -81,8 +83,7 @@ int main()
         full_message.append(buffer, received);
 
         if (received < MAX_UDP_PAYLOAD) {
-            StopWatch sw; 
-            sw.Start();
+            
 
             while (!full_message.empty() && full_message.back() == '\n') 
             {

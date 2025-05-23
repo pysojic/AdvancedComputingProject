@@ -139,5 +139,5 @@ double StopWatch::GetTime() const
 
 void StopWatch::display_time() const
 {
-	std::cout << m_name << " - " << m_duration << "s\n";
+	std::cout << m_name << " - " << m_duration - 1.0 << "s\n";
 }
