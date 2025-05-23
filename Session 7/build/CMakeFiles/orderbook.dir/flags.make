@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = 
 
-CXX_FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -MDd /permissive- /Zc:preprocessor /O2 /EHsc -std:c++20
+CXX_FLAGS = /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -MD /permissive- /Zc:preprocessor /O2 /EHsc -std:c++20
 
