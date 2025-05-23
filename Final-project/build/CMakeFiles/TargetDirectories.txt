@@ -1,4 +1,0 @@
-/cygdrive/c/Users/benja/OneDrive/Bureau/UchicagoMSFM/advanced_computing/AdvancedComputingProject/Final-project/build/CMakeFiles/Final_Project_Server.dir
-/cygdrive/c/Users/benja/OneDrive/Bureau/UchicagoMSFM/advanced_computing/AdvancedComputingProject/Final-project/build/CMakeFiles/Final_Project_Client.dir
-/cygdrive/c/Users/benja/OneDrive/Bureau/UchicagoMSFM/advanced_computing/AdvancedComputingProject/Final-project/build/CMakeFiles/edit_cache.dir
-/cygdrive/c/Users/benja/OneDrive/Bureau/UchicagoMSFM/advanced_computing/AdvancedComputingProject/Final-project/build/CMakeFiles/rebuild_cache.dir
