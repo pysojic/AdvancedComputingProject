@@ -8,7 +8,6 @@
 #include <vector>
 #include <arpa/inet.h>
 #include <StopWatch.hpp>
-#include "../include/OrderBook.hpp"
 
 #define MAX_UDP_PAYLOAD 1400 // Matches the server's max UDP payload
 #define CLIENT_UDP_PORT 3001 // Match this with the server's sending port
