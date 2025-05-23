@@ -61,26 +61,26 @@ int main()
     }
     std::cout << "TCP connection successfully established!\n";
 
-    // --- receive loop ---
     char        buffer[MAX_UDP_PAYLOAD];
     socklen_t   client_len   = sizeof(client_addr_udp);
     std::string full_message;
 
-    while (true) {
+    while (true) 
+    {
         ssize_t received = recvfrom(client_fd_udp,
                                     buffer,
                                     sizeof(buffer),
                                     0,
                                     (sockaddr*)&client_addr_udp,
                                     &client_len);
-        if (received < 0) {
+        if (received < 0) 
+        {
             perror("recvfrom failed");
             break;
         }
 
         full_message.append(buffer, received);
 
-        // if this fragment < max, we've got the whole packet
         if (received < MAX_UDP_PAYLOAD) {
             StopWatch sw; 
             sw.Start();
@@ -105,26 +105,19 @@ int main()
             std::string target_sec   = target_line.substr(target_line.find(':') + 1);
 
             std::string target_bid, target_ask;
-            // build the literal we want to find:
             std::string prefix = "SEC|" + target_sec + "|BID|";
 
-            // locate the start of the line for our target security
             auto pos = full_message.find(prefix);
             if (pos != std::string::npos) {
-                // bid starts right after the prefix
                 size_t bid_start = pos + prefix.size();
-                // bid ends at the next '|'
                 size_t bid_end   = full_message.find('|', bid_start);
                 if (bid_end != std::string::npos) {
                     target_bid = full_message.substr(bid_start, bid_end - bid_start);
 
-                    // now look for "|ASK|" immediately after the bid
                     const std::string ask_prefix = "|ASK|";
                     auto ask_pos = full_message.find(ask_prefix, bid_end);
                     if (ask_pos != std::string::npos) {
-                        // ask value starts after "|ASK|"
                         size_t ask_start = ask_pos + ask_prefix.size();
-                        // ends at end of line
                         size_t ask_end   = full_message.find_first_of("\r\n", ask_start);
                         target_ask = full_message.substr(
                             ask_start,
