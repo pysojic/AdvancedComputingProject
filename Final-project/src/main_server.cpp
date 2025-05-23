@@ -108,7 +108,7 @@ void udp_broadcast_thread(boost::asio::io_context& io_context, unsigned short se
             std::cout << "Broadcasted challenge " << newChallenge.challenge_id
                       << " TARGET: " << newChallenge.target_ticker << std::endl;
 
-            std::this_thread::sleep_for(std::chrono::seconds(10));
+            std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     } catch (std::exception& e) {
         std::cerr << "UDP Error: " << e.what() << std::endl;

@@ -11,9 +11,10 @@ include_directories(include)
 add_executable(Final_Project_Server src/main_server.cpp)
 add_executable(Final_Project_Client src/main_client.cpp)
 
-target_compile_options(Final_Project_Server PRIVATE -O0 -march=native) # Use for debug: -O0 -g -Wall -Wextra -Wpedantic
-target_compile_options(Final_Project_Client PRIVATE -O0 -march=native) # Use for debug: -O0 -g -Wall -Wextra -Wpedantic
+target_compile_options(Final_Project_Server PRIVATE -O2 -march=native) # Use for debug: -O0 -g -Wall -Wextra -Wpedantic
+target_compile_options(Final_Project_Client PRIVATE -O2 -march=native) # Use for debug: -O0 -g -Wall -Wextra -Wpedantic
 
+target_include_directories(Final_Project_Client PRIVATE "/Users/py/Documents/C++ libs/compile-time-regular-expressions/single-header")
 target_link_libraries(Final_Project_Server PRIVATE Boost::filesystem Boost::system)
 
 

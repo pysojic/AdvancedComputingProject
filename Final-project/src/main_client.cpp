@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <vector>
 #include <arpa/inet.h>
+#include <StopWatch.hpp>
+#include "ctre.hpp"
 #include "../include/OrderBook.hpp"
 
 #define MAX_UDP_PAYLOAD 1400 // Matches the server's max UDP payload
@@ -14,115 +16,150 @@
 #define TCP_PORT 4000
 #define LOCAL_IP "127.0.0.1"
 
-void parse_message(const std::string& message, OrderBook& order_book, int& challenge_id, std::string& target_sec) {
-    std::istringstream stream(message);
-    std::string line;
-    std::string sec_id;
-    double bid, ask;
-
-    while (std::getline(stream, line)) {
-        if (line.empty()) continue;
-        std::istringstream line_stream(line);
-        std::string token;
-        std::vector<std::string> tokens;
-
-        if (line.find('|') != std::string::npos) {
-            while (std::getline(line_stream, token, '|')) {
-                tokens.push_back(token);
-            }
-
-            if (tokens.size() == 6 && tokens[0] == "SEC") {
-                sec_id = tokens[1];
-                bid = std::stod(tokens[3]);
-                ask = std::stod(tokens[5]);
-                order_book.addOrder(sec_id, bid, ask);
-            }
-        } 
-        else {
-            while (std::getline(line_stream, token, ':')) {
-                tokens.push_back(token);
-            }
-            
-            if (tokens[0] == "TARGET") {
-                target_sec = tokens[1];
-            }
-            else {
-                challenge_id = std::stoi(tokens[1]);
-            }
-        }
-    }
-}
-
-int main() {
-    // Set UDP socket
+int main()
+{
+    // --- UDP setup ---
     int client_fd_udp = socket(AF_INET, SOCK_DGRAM, 0);
     if (client_fd_udp < 0) {
         perror("Socket creation failed");
         return 1;
     }
-
-    // Allow reuse to prevent conflicts
     int enable_reuse = 1;
-    setsockopt(client_fd_udp, SOL_SOCKET, SO_REUSEADDR, &enable_reuse, sizeof(enable_reuse));
+    setsockopt(client_fd_udp, SOL_SOCKET, SO_REUSEADDR,
+               &enable_reuse, sizeof(enable_reuse));
 
     sockaddr_in client_addr_udp{};
-    client_addr_udp.sin_family = AF_INET;
-    client_addr_udp.sin_port = htons(CLIENT_UDP_PORT);
+    client_addr_udp.sin_family      = AF_INET;
+    client_addr_udp.sin_port        = htons(CLIENT_UDP_PORT);
     client_addr_udp.sin_addr.s_addr = inet_addr(LOCAL_IP);
 
-    if (bind(client_fd_udp, (sockaddr*)&client_addr_udp, sizeof(client_addr_udp)) < 0) {
+    if (bind(client_fd_udp,
+             (sockaddr*)&client_addr_udp,
+             sizeof(client_addr_udp)) < 0) {
         perror("UDP Binding failed");
         return 1;
     }
+    std::cout << "UDP Client listening on port "
+              << CLIENT_UDP_PORT << "...\n";
 
-    std::cout << "UDP Client listening on port " << CLIENT_UDP_PORT << "...\n";
-
-    // Set up TCP socket
+    // --- TCP setup ---
     int client_fd_tcp = socket(AF_INET, SOCK_STREAM, 0);
-    sockaddr_in server_addr_tcp = {AF_INET, 0, INADDR_ANY};
-    server_addr_tcp.sin_port = htons(TCP_PORT);
+    if (client_fd_tcp < 0) {
+        perror("TCP socket creation failed");
+        return 1;
+    }
+    sockaddr_in server_addr_tcp{};
+    server_addr_tcp.sin_family      = AF_INET;
+    server_addr_tcp.sin_port        = htons(TCP_PORT);
+    server_addr_tcp.sin_addr.s_addr = INADDR_ANY;
 
-    connect(client_fd_tcp, (sockaddr*)&server_addr_tcp, sizeof(server_addr_tcp)); // Connect to server
-    std::cout << "TCP connection successfully established!" << std::endl;
+    if (connect(client_fd_tcp,
+                (sockaddr*)&server_addr_tcp,
+                sizeof(server_addr_tcp)) < 0) {
+        perror("TCP connection failed");
+        return 1;
+    }
+    std::cout << "TCP connection successfully established!\n";
 
-    char buffer[MAX_UDP_PAYLOAD];
-    socklen_t client_len = sizeof(client_addr_udp);
-
+    // --- receive loop ---
+    char        buffer[MAX_UDP_PAYLOAD];
+    socklen_t   client_len   = sizeof(client_addr_udp);
     std::string full_message;
 
     while (true) {
-        ssize_t received = recvfrom(client_fd_udp, buffer, sizeof(buffer), 0, (sockaddr*)&client_addr_udp, &client_len);
+        ssize_t received = recvfrom(client_fd_udp,
+                                    buffer,
+                                    sizeof(buffer),
+                                    0,
+                                    (sockaddr*)&client_addr_udp,
+                                    &client_len);
         if (received < 0) {
             perror("recvfrom failed");
             break;
         }
 
-        std::string fragment(buffer, received);
-        full_message += fragment;
+        full_message.append(buffer, received);
 
+        // if this fragment < max, we've got the whole packet
         if (received < MAX_UDP_PAYLOAD) {
-            // std::cout << "Message received: " << full_message << std::endl;
-            OrderBook order_book;
-            int challenge_id;
-            std::string target_sec;
-            parse_message(full_message, order_book, challenge_id, target_sec);
-            std::cout << "Challenge ID: " << challenge_id << "\n";
-            std::cout << "Target Security: " << target_sec << "\n";
-            order_book.print_book();
-            std::cout << "\n\n";
+            StopWatch sw; 
+            sw.Start();
 
-            std::string response = "CHALLENGE_RESPONSE " + std::to_string(challenge_id) + " " + target_sec + 
-                                   " BID: " + std::to_string(std::get<0>(order_book.queryTicker(target_sec))) +
-                                   " ASK: " + std::to_string(std::get<0>(order_book.queryTicker(target_sec))) +
-                                   " trader_name" + "\n";
-
-
-            std::cout << "Sending response to server: " << response << std::endl;
-            send(client_fd_tcp, response.c_str(), response.size(), 0);
-            std::cout << "Response sent" << std::endl;
+            while (!full_message.empty() && full_message.back() == '\n') 
+            {
+                full_message.pop_back();
+            }
+        
+            auto pos_last = full_message.rfind('\n');
+            auto pos_second_last = (pos_last == std::string::npos)
+                ? std::string::npos
+                : full_message.rfind('\n', pos_last - 1);
+        
+            std::string challenge_line = full_message.substr(
+                pos_second_last + 1,
+                pos_last - pos_second_last - 1
+            );
+            std::string target_line = full_message.substr(pos_last + 1);
             
+            std::string challenge_id = challenge_line.substr(challenge_line.find(':') + 1);
+            std::string target_sec   = target_line.substr(target_line.find(':') + 1);
 
-            full_message.clear();  // Ready for the next message
+            std::string target_bid, target_ask;
+            // build the literal we want to find:
+            std::string prefix = "SEC|" + target_sec + "|BID|";
+
+            // locate the start of the line for our target security
+            auto pos = full_message.find(prefix);
+            if (pos != std::string::npos) {
+                // bid starts right after the prefix
+                size_t bid_start = pos + prefix.size();
+                // bid ends at the next '|'
+                size_t bid_end   = full_message.find('|', bid_start);
+                if (bid_end != std::string::npos) {
+                    target_bid = full_message.substr(bid_start, bid_end - bid_start);
+
+                    // now look for "|ASK|" immediately after the bid
+                    const std::string ask_prefix = "|ASK|";
+                    auto ask_pos = full_message.find(ask_prefix, bid_end);
+                    if (ask_pos != std::string::npos) {
+                        // ask value starts after "|ASK|"
+                        size_t ask_start = ask_pos + ask_prefix.size();
+                        // ends at end of line
+                        size_t ask_end   = full_message.find_first_of("\r\n", ask_start);
+                        target_ask = full_message.substr(
+                            ask_start,
+                            (ask_end == std::string::npos ? 
+                            full_message.size() : ask_end) - ask_start
+                        );
+                    }
+                }
+            }
+
+            // 4) Debug output
+            std::cout << "CHALLENGE_ID: " << challenge_id << "\n";
+            std::cout << "TARGET:       " << target_sec  << "\n";
+            std::cout << "BID (regex):  " << target_bid  << "\n";
+            std::cout << "ASK (regex):  " << target_ask  << "\n";
+            std::cout << "\n";
+
+            // 5) Build & send response
+            std::string response =
+                "CHALLENGE_RESPONSE " + challenge_id +
+                " " + target_sec +
+                " BID: " + target_bid +
+                " ASK: " + target_ask +
+                " trader_name\n";
+
+            send(client_fd_tcp,
+                 response.c_str(),
+                 response.size(),
+                 0);
+
+            sw.Stop();
+            sw.display_time();
+            std::cout << "Sent: " << response << "\n";
+
+            full_message.clear();
         }
     }
 
