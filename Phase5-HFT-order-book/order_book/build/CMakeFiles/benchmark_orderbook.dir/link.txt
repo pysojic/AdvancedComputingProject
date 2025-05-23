@@ -1,0 +1,1 @@
+/usr/bin/c++.exe -Wl,--enable-auto-import CMakeFiles/benchmark_orderbook.dir/src/main.cpp.o -o benchmark_orderbook.exe -Wl,--out-implib,libbenchmark_orderbook.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
